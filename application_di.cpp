@@ -11,7 +11,7 @@ namespace dll = boost::dll;
 
 class app {
  private:
-	 boost::shared_ptr<ioperation> ptr_;
+	boost::shared_ptr<ioperation> ptr_;
  public:
   	app(boost::shared_ptr<ioperation> ptr)
 	 : ptr_(ptr)
@@ -59,9 +59,9 @@ int main(int argc, char* argv[]) {
 	const auto injector = di::make_injector(
           di::bind<ioperation>().to([&](const auto& injector) -> boost::shared_ptr<ioperation> {
             if (use_sum)
-              return injector.template create<boost::shared_ptr<sum_namespace::sum>>();
+              return injector.template create<boost::shared_ptr<sum_ptr>>();
             else
-              return injector.template create<boost::shared_ptr<dot_product_namespace::dot_product>>();
+              return injector.template create<boost::shared_ptr<dot_product_ptr>>();
         })
 	);
   
