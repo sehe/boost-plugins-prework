@@ -1,12 +1,12 @@
+#pragma once
+#include <boost/shared_ptr.hpp>
 #include <string>
 
-class ioperation {
+struct ioperation {
+  virtual std::string name() const                = 0;
+  virtual float       calculate(float x, float y) = 0;
 
-public:
-    virtual std::string name() const = 0;
-    virtual float calculate(float x, float y) = 0;
-
-    virtual ~ioperation() {}
+  virtual ~ioperation() = default;
 };
 
-
+using op_ptr = boost::shared_ptr<ioperation>;

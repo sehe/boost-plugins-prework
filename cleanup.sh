@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-rm -f application_main lib*
+rm -fv application_main lib* *.o
 echo "=> cleaned up!" 

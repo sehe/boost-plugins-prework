@@ -1,23 +1,26 @@
 #!/bin/bash
 
-set -e 
+set -e -x -u
 ./cleanup.sh
 
 echo "=> Compiling now..."
-g++ -std=c++14 -fPIC -c -o libsum.o  sum.cpp
-g++ -shared -o libsum.so libsum.o
+CPPFLAGS="-std=c++14 -fPIC -I /home/sehe/custom/boost-di/include/"
+LDFLAGS=""
 
-g++ -std=c++14 -fPIC -c -o libdot_product.o  dot_product.cpp
-g++ -shared -o libdot_product.so libdot_product.o
+# Required to compile on sehe's machine:
+#CPPFLAGS="$CPPFLAGS -I /home/sehe/custom/boost-di/include/"
+#CPPFLAGS="$CPPFLAGS -isystem /home/sehe/custom/superboost/ ";
+#LDFLAGS="$LDFLAGS -L /home/sehe/custom/superboost/stage/lib"
 
-g++ -std=c++14 -lboost_filesystem -lboost_system -ldl application_main.cpp -o application_main
+g++ $CPPFLAGS sum.cpp -shared -o libsum.so $LDFLAGS
+g++ $CPPFLAGS dot_product.cpp -shared -o libdot_product.so $LDFLAGS
 
-echo "=> Compilation completed. "
+# add application libraries
+LDFLAGS="$LDFLAGS -lboost_filesystem -lboost_system -ldl"
+g++ $CPPFLAGS application_main.cpp -o application_main $LDFLAGS
+g++ $CPPFLAGS application_di.cpp -o application_di $LDFLAGS
 
-	
-
-echo "=> Executing ./application_main ."
 ./application_main .
 
-
-
+./application_di . use_sum
+./application_di . # uses dot_product
